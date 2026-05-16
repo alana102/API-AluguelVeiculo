@@ -13,7 +13,7 @@ from pathlib import Path
 # Carregar variáveis do arquivo .env
 load_dotenv()
 
-UPLOAD_DIR = os.getenv("UPLOAD_DIR", "/uploads")
+UPLOAD_DIR = os.getenv("UPLOAD_DIR", "uploads")
 
 Path(UPLOAD_DIR).mkdir(parents=True, exist_ok=True)
 
