@@ -5,11 +5,12 @@
 ```mermaid
 erDiagram
     %% Relacionamentos
-    OFERTADOR ||--o{ ALUGUEL : "disponibiliza"
-    CLIENTE ||--o{ ALUGUEL : "realiza"
-    VEICULO ||--o{ ALUGUEL : "reservado_em"
-    ALUGUEL ||--|| PAGAMENTO : "possui"
-    VEICULO ||--o{ DOCUMENT : "tem_anexos"
+    CLIENTE }|--|{ VEICULO : "aluga"
+    OFERTADOR ||--o{ VEICULO : "cadastra"
+    CLIENTE ||--o{ ALUGUEL : "solicita"
+    VEICULO ||--o{ ALUGUEL : "vincula"
+    ALUGUEL ||--|| PAGAMENTO : "gera"
+    VEICULO ||--o{ DOCUMENTO : "anexa"
 
     %% Entidades
     OFERTADOR {
@@ -28,6 +29,7 @@ erDiagram
 
     VEICULO {
         int id PK
+        int fk_ofertador FK
         string placa
         string tipo
         string modelo
@@ -38,7 +40,6 @@ erDiagram
         int id PK
         int fk_cliente FK
         int fk_veiculo FK
-        int fk_ofertador FK
         date data_inicio
         date data_fim
         string status
@@ -52,8 +53,9 @@ erDiagram
         date data_pagamento
     }
 
-    DOCUMENT {
+    DOCUMENTO {
         int id PK
+        int fk_veiculo FK
         string original_filename
         string content_type
         string extension
