@@ -9,3 +9,9 @@ __pycache__/
 
 # Variáveis de ambiente
 .env
+
+# Documentos de imagem
+/uploads
+
+# Banco SQLite
+aluguel-veiculo.db
