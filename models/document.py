@@ -1,5 +1,6 @@
 from datetime import datetime, timezone
 from sqlmodel import SQLModel, Field, Relationship
+from sqlalchemy import Column, DateTime
 import uuid
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -11,7 +12,7 @@ class DocumentBase(SQLModel):
     content_type: str
     extension: str
     size_bytes: int
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = Field(sa_column=Column(DateTime(timezone=True), default=datetime.now(timezone.utc)))
 
 class Document(DocumentBase, table=True):
       veiculo_id: int = Field(foreign_key="veiculo.id")
