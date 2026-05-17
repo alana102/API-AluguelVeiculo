@@ -1,0 +1,68 @@
+from fastapi import APIRouter, HTTPException, Depends
+from sqlmodel.ext.asyncio.session import AsyncSession
+from models import Document, Veiculo
+from database import get_session
+import os
+from fastapi import UploadFile, File
+from database import save_upload_file
+
+from fastapi_pagination import Page
+from fastapi_pagination.ext.sqlmodel import apaginate
+from sqlmodel import select
+from sqlalchemy.orm import selectinload
+
+router = APIRouter(
+    prefix="/veiculos",  # Prefixo para todas as rotas
+    tags=["Veiculos"],
+)
+
+# Veículos
+
+# Adicionar Veículos
+@router.post("/", response_model=Veiculo)
+async def Create_Veiculo(veiculo: Veiculo, session: AsyncSession = Depends(get_session)):
+    print("Criando veículo: ", veiculo)
+    session.add(veiculo)
+    await session.commit()
+    await session.refresh(veiculo)
+    return veiculo
+
+# Documentos
+
+# Enviar documento para um veículo
+@router.post("/{veiculo_id}/documents", response_model=Document)
+async def Add_Doc_Em_Veiculo(veiculo_id: int, file: UploadFile = File(...), session: AsyncSession = Depends(get_session)):
+    veiculo = await session.get(Veiculo, veiculo_id)
+    if not veiculo:
+        raise HTTPException(status_code=404, detail="Veículo não encontrado")
+    
+    nome_original = file.filename
+    extensao = os.path.splitext(nome_original)[1]
+
+    novo_doc = Document(
+        original_filename=nome_original,
+        content_type=file.content_type,
+        extension=extensao,
+        size_bytes=file.size,
+        veiculo_id=veiculo_id
+    )
+
+    session.add(novo_doc)
+    await session.commit()
+    await session.refresh(novo_doc)
+
+    await save_upload_file(file, novo_doc.id)
+
+    return novo_doc
+
+# Listar documentos de um veículo
+@router.get("/{veiculo_id}/documents", response_model=Page[Document])
+async def Listar_Docs_Veiculo(veiculo_id: int, session: AsyncSession = Depends(get_session)):
+    veiculo = await session.get(Veiculo, veiculo_id)
+    if not veiculo:
+        raise HTTPException(status_code=404, detail="Veículo não encontrado")
+    
+    statement = select(Document).where(Document.veiculo_id == veiculo_id).options(selectinload(Document.veiculo))
+    return await apaginate(session, statement)
+
+
