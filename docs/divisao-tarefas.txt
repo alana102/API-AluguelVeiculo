@@ -7,3 +7,5 @@ Alana Sousa:
 Clara Cruz:
 
 Vitor Nayan:
+- Implementou o CRUD completo das entidades Cliente, Ofertador, Aluguel e Pagamento.
+- Criou as consultas complexas, agregações e estatísticas.

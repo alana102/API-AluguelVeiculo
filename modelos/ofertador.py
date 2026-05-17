@@ -9,7 +9,7 @@ class OfertadorBase(SQLModel):
     nome: str
     CNPJ: str
     endereco: str
-    status: str = Field(default="ativo")
+    ativo: bool = Field(default=True)
 
 class Ofertador(OfertadorBase, table = True):
     """

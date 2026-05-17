@@ -18,6 +18,7 @@ class VeiculoBase(SQLModel):
     tipo: str
     modelo: str
     status: str
+    ativo: bool = Field(default=True)
 
 class Veiculo(VeiculoBase, table = True):
     """

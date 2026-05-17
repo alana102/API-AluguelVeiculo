@@ -13,17 +13,17 @@ router = APIRouter(
     tags=["Clientes"],
 )
 
-# Listar Clientes (Paginado)
+# Listar Clientes (Paginado) - Apenas Ativos
 @router.get("/", response_model=Page[Cliente])
 async def listar_clientes(session: AsyncSession = Depends(get_session)):
-    statement = select(Cliente).options(selectinload(Cliente.alugueis))
+    statement = select(Cliente).where(Cliente.ativo == True).options(selectinload(Cliente.alugueis))
     return await apaginate(session, statement)
 
 # Obter Cliente por ID
 @router.get("/{cliente_id}", response_model=Cliente)
 async def obter_cliente(cliente_id: int, session: AsyncSession = Depends(get_session)):
     cliente = await session.get(Cliente, cliente_id)
-    if not cliente:
+    if not cliente or not cliente.ativo:
         raise HTTPException(status_code=404, detail="Cliente não encontrado")
     return cliente
 
@@ -43,7 +43,7 @@ async def criar_cliente(cliente: Cliente, session: AsyncSession = Depends(get_se
 @router.put("/{cliente_id}", response_model=Cliente)
 async def atualizar_cliente(cliente_id: int, cliente_data: Cliente, session: AsyncSession = Depends(get_session)):
     db_cliente = await session.get(Cliente, cliente_id)
-    if not db_cliente:
+    if not db_cliente or not db_cliente.ativo:
         raise HTTPException(status_code=404, detail="Cliente não encontrado")
     
     dados = cliente_data.model_dump(exclude_unset=True)
@@ -59,13 +59,14 @@ async def atualizar_cliente(cliente_id: int, cliente_data: Cliente, session: Asy
         await session.rollback()
         raise HTTPException(status_code=400, detail=str(e))
 
-# Deletar Cliente
-@router.delete("/{cliente_id}", status_code=status.HTTP_204_NO_CONTENT)
+# Deletar Cliente (Soft Delete)
+@router.delete("/{cliente_id}", status_code=status.HTTP_200_OK)
 async def deletar_cliente(cliente_id: int, session: AsyncSession = Depends(get_session)):
     cliente = await session.get(Cliente, cliente_id)
     if not cliente:
         raise HTTPException(status_code=404, detail="Cliente não encontrado")
     
-    await session.delete(cliente)
+    cliente.ativo = False
+    session.add(cliente)
     await session.commit()
-    return None
+    return {"detail": "Cliente desativado com sucesso"}

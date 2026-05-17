@@ -12,7 +12,7 @@ class ClienteBase(SQLModel):
         nome: str
         CPF: str
         telefone: str
-        status: str = Field(default="ativo")
+        ativo: bool = Field(default=True)
 
 class Cliente(ClienteBase, table=True):
         """
