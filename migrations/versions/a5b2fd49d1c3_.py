@@ -1,8 +1,8 @@
-"""corrigindo estrutura do banco
+"""empty message
 
-Revision ID: efb558eb0012
+Revision ID: a5b2fd49d1c3
 Revises: 
-Create Date: 2026-05-16 21:50:08.200923
+Create Date: 2026-05-17 12:41:52.213692
 
 """
 from typing import Sequence, Union
@@ -13,7 +13,7 @@ import sqlalchemy as sa
 import sqlmodel
 
 # revision identifiers, used by Alembic.
-revision: str = 'efb558eb0012'
+revision: str = 'a5b2fd49d1c3'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -48,8 +48,8 @@ def upgrade() -> None:
     )
     op.create_table('aluguel',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('data_inicio', sa.DateTime(), nullable=False),
-    sa.Column('data_fim', sa.DateTime(), nullable=False),
+    sa.Column('data_inicio', sa.DateTime(timezone=True), nullable=True),
+    sa.Column('data_fim', sa.DateTime(timezone=True), nullable=True),
     sa.Column('status', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('fk_cliente', sa.Integer(), nullable=False),
     sa.Column('fk_veiculo', sa.Integer(), nullable=False),
@@ -79,11 +79,11 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('valor_total', sa.Float(), nullable=False),
     sa.Column('metodo', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-    sa.Column('data_pagamento', sa.DateTime(), nullable=False),
+    sa.Column('data_pagamento', sa.DateTime(timezone=True), nullable=True),
     sa.Column('fk_aluguel', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['fk_aluguel'], ['aluguel.id'], ),
-    sa.ForeignKeyConstraint(['id'], ['aluguel.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('fk_aluguel')
     )
     # ### end Alembic commands ###
 

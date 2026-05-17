@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlmodel.ext.asyncio.session import AsyncSession
-from modelos import Documento, Veiculo
+from modelos import Documento, Veiculo, Ofertador
 from database import get_session
 import os
 from fastapi import UploadFile, File
@@ -21,6 +21,12 @@ router = APIRouter(
 # Adicionar Veículos
 @router.post("/", response_model=Veiculo)
 async def Create_Veiculo(veiculo: Veiculo, session: AsyncSession = Depends(get_session)):
+    """ Rota responsável por criar um novo veículo """
+    ofertador_existe = await session.get(Ofertador, veiculo.fk_ofertador)
+
+    if not ofertador_existe:
+        raise HTTPException(status_code=404, detail="Ofertador não encontrado")
+    
     print("Criando veículo: ", veiculo)
     session.add(veiculo)
     await session.commit()
@@ -32,6 +38,7 @@ async def Create_Veiculo(veiculo: Veiculo, session: AsyncSession = Depends(get_s
 # Enviar documento para um veículo
 @router.post("/{veiculo_id}/documents", response_model=Documento)
 async def Add_Doc_Em_Veiculo(veiculo_id: int, file: UploadFile = File(...), session: AsyncSession = Depends(get_session)):
+    """ Rota responsável por adicionar um documento em um veículo a partir do veiculo_id """
     veiculo = await session.get(Veiculo, veiculo_id)
     if not veiculo:
         raise HTTPException(status_code=404, detail="Veículo não encontrado")
@@ -44,7 +51,7 @@ async def Add_Doc_Em_Veiculo(veiculo_id: int, file: UploadFile = File(...), sess
         content_type=file.content_type,
         extension=extensao,
         size_bytes=file.size,
-        veiculo_id=veiculo_id
+        fk_veiculo=veiculo_id
     )
 
     session.add(novo_doc)
@@ -58,11 +65,12 @@ async def Add_Doc_Em_Veiculo(veiculo_id: int, file: UploadFile = File(...), sess
 # Listar documentos de um veículo
 @router.get("/{veiculo_id}/documents", response_model=Page[Documento])
 async def Listar_Docs_Veiculo(veiculo_id: int, session: AsyncSession = Depends(get_session)):
+    """ Rota responsável por listar todos os documentos associados a um veículo a partir do veiculo_id """
     veiculo = await session.get(Veiculo, veiculo_id)
     if not veiculo:
         raise HTTPException(status_code=404, detail="Veículo não encontrado")
     
-    statement = select(Documento).where(Documento.veiculo_id == veiculo_id).options(selectinload(Documento.veiculo))
+    statement = select(Documento).where(Documento.fk_veiculo == veiculo_id).options(selectinload(Documento.veiculo))
     return await apaginate(session, statement)
 
 

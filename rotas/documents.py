@@ -17,6 +17,7 @@ router = APIRouter(
 # Retorna os metadados do documento
 @router.get("/{document_id}", response_model=Documento)
 async def read_document(document_id: str, session: AsyncSession = Depends(get_session)):
+    """ Rota responsável por retornar os metadados de um documento a partir do seu id """
     document = await session.get(Documento, document_id)
     if not document:
         raise HTTPException(status_code=404, detail="Documento não encontrado")
@@ -25,6 +26,7 @@ async def read_document(document_id: str, session: AsyncSession = Depends(get_se
 # Download do arquivo
 @router.get("/{document_id}/download")
 async def download_document(document_id: str, session: AsyncSession = Depends(get_session)):
+    """ Rota responsável por permitir que o usuário faça download de um documento a partir de seu id """
     document = await session.get(Documento, document_id)
     if not document:
         raise HTTPException(status_code=404, detail="Documento não encontrado")
@@ -43,6 +45,7 @@ async def download_document(document_id: str, session: AsyncSession = Depends(ge
 # Substitui o arquivo do documento
 @router.put("/{document_id}", response_model=Documento)
 async def update_document(document_id: str, file: UploadFile = File(...), session: AsyncSession = Depends(get_session)):
+    """ Rota responsável por atualizar um documento a partir de seu id """
     document = await session.get(Documento, document_id)
     if not document:
         raise HTTPException(status_code=404, detail="Documento não encontrado")
@@ -68,6 +71,7 @@ async def update_document(document_id: str, file: UploadFile = File(...), sessio
 # Apagar documento
 @router.delete("/{document_id}")
 async def delete_document(document_id: str, session: AsyncSession = Depends(get_session)):
+    """ Rota responsável por apagar um documento a partir de seu id """
     document = await session.get(Documento, document_id)
     if not document:
         raise HTTPException(status_code=404, detail="Documento não encontrado")
