@@ -1,4 +1,8 @@
 Alana Sousa:
+- Fez a lógica de associar um documento (imagem, pdf, etc) a uma outra classe sem armazenar o documento no banco de dados diretamente 
+- Fez o script de carga para povoar o banco de dados com no mínimo 100 registros
+- Fez as rotas reclacionadas à classe Documento
+- Criou e associou o banco de dados Postgre em nuvem na API utilizando o Supabase
 
 Clara Cruz:
 
