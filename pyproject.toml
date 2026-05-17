@@ -12,4 +12,6 @@ dependencies = [
     "fastapi-pagination>=0.15.12",
     "fastapi[standard]>=0.136.1",
     "sqlmodel>=0.0.38",
+    "faker>=40.18.0",
 ]
+

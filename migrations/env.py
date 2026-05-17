@@ -10,8 +10,7 @@ from alembic import context
 from dotenv import load_dotenv
 import os
 from sqlmodel import SQLModel
-# importar classes das tabelas do banco depois
-# from models import 
+from modelos import Documento, Veiculo, Aluguel, Cliente, Ofertador, Pagamento
 
 load_dotenv()
 
