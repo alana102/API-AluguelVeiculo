@@ -19,10 +19,12 @@ class Aluguel(AluguelBase, table = True):
     Atua em um relacionamento de muitos-para-um (N:1) com Cliente e Veículo, mapeando 
     os detalhes operacionais e possuindo um vínculo exclusivo um-para-um (1:1) com Pagamento.
     """
-    fk_cliente: int = Field(default = None, foreign_key = "cliente.id")
-    fk_veiculo: int = Field(default = None, foreign_key = "veiculo.id")
+    fk_cliente: int = Field(foreign_key = "cliente.id")
+    fk_veiculo: int = Field(foreign_key = "veiculo.id")
 
     cliente: "Cliente" = Relationship(back_populates="alugueis")
     veiculo: "Veiculo" = Relationship(back_populates="alugueis")
 
-    pagamento: "Pagamento" | None = Relationship(back_populates="aluguel")
+    pagamento: "Pagamento" | None = Relationship(
+                                    back_populates="aluguel", 
+                                    sa_relationship_kwargs={"uselist": False})
