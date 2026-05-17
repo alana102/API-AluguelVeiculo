@@ -1,6 +1,6 @@
 from .cliente import Cliente, ClienteBase
 from .ofertador import Ofertador, OfertadorBase
-from .veiculo import Veiculo, VeiculoBase
+from .veiculo import Veiculo, VeiculoBase, ClienteVeiculo
 from .documento import Documento, DocumentoBase
 from .aluguel import Aluguel, AluguelBase
 from .pagamento import Pagamento, PagamentoBase

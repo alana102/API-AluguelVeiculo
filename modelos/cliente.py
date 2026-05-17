@@ -1,8 +1,10 @@
 from sqlmodel import SQLModel, Field, Relationship
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from .veiculo import Veiculo, ClienteVeiculo
+    from .veiculo import Veiculo
     from .aluguel import Aluguel
+
+from .veiculo import ClienteVeiculo
 
 class ClienteBase(SQLModel):
         """Esquema base contendo os dados pessoais essenciais de um cliente."""

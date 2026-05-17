@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlmodel.ext.asyncio.session import AsyncSession
-from models import Document, Veiculo
+from modelos import Documento, Veiculo
 from database import get_session
 import os
 from fastapi import UploadFile, File
@@ -30,7 +30,7 @@ async def Create_Veiculo(veiculo: Veiculo, session: AsyncSession = Depends(get_s
 # Documentos
 
 # Enviar documento para um veículo
-@router.post("/{veiculo_id}/documents", response_model=Document)
+@router.post("/{veiculo_id}/documents", response_model=Documento)
 async def Add_Doc_Em_Veiculo(veiculo_id: int, file: UploadFile = File(...), session: AsyncSession = Depends(get_session)):
     veiculo = await session.get(Veiculo, veiculo_id)
     if not veiculo:
@@ -39,7 +39,7 @@ async def Add_Doc_Em_Veiculo(veiculo_id: int, file: UploadFile = File(...), sess
     nome_original = file.filename
     extensao = os.path.splitext(nome_original)[1]
 
-    novo_doc = Document(
+    novo_doc = Documento(
         original_filename=nome_original,
         content_type=file.content_type,
         extension=extensao,
@@ -56,13 +56,13 @@ async def Add_Doc_Em_Veiculo(veiculo_id: int, file: UploadFile = File(...), sess
     return novo_doc
 
 # Listar documentos de um veículo
-@router.get("/{veiculo_id}/documents", response_model=Page[Document])
+@router.get("/{veiculo_id}/documents", response_model=Page[Documento])
 async def Listar_Docs_Veiculo(veiculo_id: int, session: AsyncSession = Depends(get_session)):
     veiculo = await session.get(Veiculo, veiculo_id)
     if not veiculo:
         raise HTTPException(status_code=404, detail="Veículo não encontrado")
     
-    statement = select(Document).where(Document.veiculo_id == veiculo_id).options(selectinload(Document.veiculo))
+    statement = select(Documento).where(Documento.veiculo_id == veiculo_id).options(selectinload(Documento.veiculo))
     return await apaginate(session, statement)
 
 

@@ -28,7 +28,7 @@ class Veiculo(VeiculoBase, table = True):
     fk_ofertador: int = Field(foreign_key="ofertador.id")
     ofertador: "Ofertador" = Relationship(back_populates="veiculos")
 
-    clientes: list["Cliente"] = Relationship(back_populates="veiculos", link_model="ClienteVeiculo")
+    clientes: list["Cliente"] = Relationship(back_populates="veiculos", link_model=ClienteVeiculo)
 
     alugueis: list["Aluguel"] = Relationship(back_populates="veiculo")
     documentos: list["Documento"] = Relationship(back_populates="veiculo")

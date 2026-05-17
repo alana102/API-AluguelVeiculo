@@ -1,5 +1,6 @@
 from sqlmodel import SQLModel, Field, Relationship
 from datetime import datetime, timezone
+from sqlalchemy import Column, DateTime
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .cliente import Cliente
@@ -9,8 +10,8 @@ if TYPE_CHECKING:
 class AluguelBase(SQLModel):
     """Esquema base contendo os dados da situação de um contrato de locação."""
     id: int | None = Field(default=None, primary_key=True)
-    data_inicio: datetime = Field(default_factory = lambda: datetime.now(timezone.utc))
-    data_fim: datetime = Field(default_factory = lambda: datetime.now(timezone.utc))
+    data_inicio: datetime = Field(sa_column=Column(DateTime(timezone=True), default=datetime.now(timezone.utc)))
+    data_fim: datetime = Field(sa_column=Column(DateTime(timezone=True), default=datetime.now(timezone.utc)))
     status: str
 
 class Aluguel(AluguelBase, table = True):
@@ -25,4 +26,4 @@ class Aluguel(AluguelBase, table = True):
     cliente: "Cliente" = Relationship(back_populates="alugueis")
     veiculo: "Veiculo" = Relationship(back_populates="alugueis")
 
-    pagamento: "Pagamento" | None = Relationship(back_populates="aluguel")
+    pagamento: "Pagamento" = Relationship(back_populates="aluguel")

@@ -10,7 +10,7 @@ from alembic import context
 from dotenv import load_dotenv
 import os
 from sqlmodel import SQLModel
-from models import Document, Veiculo
+from modelos import Documento, Veiculo, Aluguel, Cliente, Ofertador, Pagamento
 
 load_dotenv()
 

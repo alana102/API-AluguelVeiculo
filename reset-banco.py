@@ -3,7 +3,7 @@ import shutil
 from sqlmodel import SQLModel
 from database import engine, UPLOAD_DIR
 import asyncio
-from models import Veiculo, Document 
+from modelos import Documento, Veiculo, Cliente, Ofertador, Pagamento, Aluguel
 
 async def reset_database():
     print("Iniciando reset do ambiente...")
