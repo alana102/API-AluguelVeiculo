@@ -18,6 +18,7 @@ erDiagram
         string nome
         string CNPJ
         string endereco
+        string status
     }
 
     CLIENTE {
@@ -25,6 +26,7 @@ erDiagram
         string nome
         string CPF
         string telefone
+        string status
     }
 
     VEICULO {
