@@ -1,8 +1,8 @@
-"""empty message
+"""Initial
 
-Revision ID: a5b2fd49d1c3
+Revision ID: f59c537d44cc
 Revises: 
-Create Date: 2026-05-17 12:41:52.213692
+Create Date: 2026-05-17 16:43:08.900464
 
 """
 from typing import Sequence, Union
@@ -13,7 +13,7 @@ import sqlalchemy as sa
 import sqlmodel
 
 # revision identifiers, used by Alembic.
-revision: str = 'a5b2fd49d1c3'
+revision: str = 'f59c537d44cc'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -27,6 +27,7 @@ def upgrade() -> None:
     sa.Column('nome', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('CPF', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('telefone', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('ativo', sa.Boolean(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('ofertador',
@@ -34,6 +35,7 @@ def upgrade() -> None:
     sa.Column('nome', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('CNPJ', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('endereco', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('ativo', sa.Boolean(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('veiculo',
@@ -42,6 +44,7 @@ def upgrade() -> None:
     sa.Column('tipo', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('modelo', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('status', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('ativo', sa.Boolean(), nullable=False),
     sa.Column('fk_ofertador', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['fk_ofertador'], ['ofertador.id'], ),
     sa.PrimaryKeyConstraint('id')

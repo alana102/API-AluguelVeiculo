@@ -26,6 +26,6 @@ class Aluguel(AluguelBase, table = True):
     cliente: "Cliente" = Relationship(back_populates="alugueis")
     veiculo: "Veiculo" = Relationship(back_populates="alugueis")
 
-    pagamento: "Pagamento" | None = Relationship(
+    pagamento: "Pagamento" = Relationship(
                                     back_populates="aluguel", 
                                     sa_relationship_kwargs={"uselist": False})

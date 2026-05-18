@@ -5,5 +5,11 @@ Alana Sousa:
 - Criou e associou o banco de dados Postgre em nuvem na API utilizando o Supabase
 
 Clara Cruz:
+- Fez o diagrama ER em Mermaid.
+- Fez a modelagens das entidades com SQLModel.
+- Mapeamento dos relacionamentos (1:1, 1:N e N:M via link_model).
+- Documentação dos models (docstrings).
 
 Vitor Nayan:
+- Implementou o CRUD completo das entidades Cliente, Ofertador, Aluguel e Pagamento.
+- Criou as consultas complexas, agregações e estatísticas.
